@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CyberShield AI</title>
+    <title>Aegisthedefender</title>
     <style>
         body { font-family: Arial; margin: 40px; }
         input, button { margin: 5px; padding: 8px; }
@@ -15,15 +15,15 @@
     </style>
 </head>
 <body>
-    <h1>CyberShield AI</h1>
-    <p>Система учится сама каждые 20 сек + Определяет типы атак</p>
+    <h1>Aegisthedefender</h1>
+    <p>The system learns itself every 20 seconds + Identifies attack types</p>
     <div>
         <input type="number" id="packets" placeholder="Пакеты/сек" value="100"><br>
         <input type="number" id="ips" placeholder="Уникальные IP" value="5"><br>
         <input type="number" id="ssh" placeholder="SSH попытки" value="2"><br>
         <input type="number" id="ports" placeholder="Сканы портов" value="1"><br>
     </div>
-    <button onclick="analyze()">Анализировать трафик</button>
+    <button onclick="analyze()">Analyze traffic</button>
     <div id="result"></div>
     <script>
         async function analyze() {
@@ -40,10 +40,10 @@
             
             div.innerHTML = `
                 <h3 class="${result.level}">${result.status}</h3>
-                <p><strong>Тип угрозы:</strong> ${result.attack_type}</p>
-                <p><strong>Уверенность ИИ:</strong> ${result.confidence}%</p>
-                <p><strong>Уровень риска:</strong> ${result.risk}%</p>
-                <p><strong>Изучено паттернов:</strong> ${result.patterns}</p>
+                <p><strong>Threat type:</strong> ${result.attack_type}</p>
+                <p><strong>AI Confidence:</strong> ${result.confidence}%</p>
+                <p><strong>Risk level:</strong> ${result.risk}%</p>
+                <p><strong>Studied patterns:</strong> ${result.patterns}</p>
             `;
         }
 
@@ -67,11 +67,11 @@
         }
     </script>
     <div style="margin-top: 20px;">
-        <h4>Быстрые тесты (запускают анализ сразу):</h4>
+        <h4>Quick tests (start analysis immediately):</h4>
         <button onclick="setAndAnalyze(8000, 150, 5, 3)">DDoS</button>
-        <button onclick="setAndAnalyze(2000, 25, 2, 25)">Сканирование</button>
-        <button onclick="setAndAnalyze(800, 3, 35, 1)">SSH Атака</button>
-        <button onclick="setAndAnalyze(100, 5, 2, 1)">Норма</button>
+        <button onclick="setAndAnalyze(2000, 25, 2, 25)">Scanning</button>
+        <button onclick="setAndAnalyze(800, 3, 35, 1)">SSH attack</button>
+        <button onclick="setAndAnalyze(100, 5, 2, 1)">Norm</button>
     </div>
     <script>
     function setAndAnalyze(packets, ips, ssh, ports) {
