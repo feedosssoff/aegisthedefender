@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CyberShield AI</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        input, button { margin: 5px; padding: 8px; }
+        .critical { color: red; font-weight: bold; }
+        .warning { color: orange; }
+        .normal { color: green; }
+        #result { margin-top: 20px; padding: 15px; border-radius: 5px; }
+        .critical-bg { background: #ffe6e6; border: 2px solid red; }
+        .warning-bg { background: #fff3e6; border: 2px solid orange; }
+        .normal-bg { background: #e6ffe6; border: 2px solid green; }
+    </style>
+</head>
+<body>
+    <h1>CyberShield AI</h1>
+    <p>Система учится сама каждые 20 сек + Определяет типы атак</p>
+    <div>
+        <input type="number" id="packets" placeholder="Пакеты/сек" value="100"><br>
+        <input type="number" id="ips" placeholder="Уникальные IP" value="5"><br>
+        <input type="number" id="ssh" placeholder="SSH попытки" value="2"><br>
+        <input type="number" id="ports" placeholder="Сканы портов" value="1"><br>
+    </div>
+    <button onclick="analyze()">Анализировать трафик</button>
+    <div id="result"></div>
+    <script>
+        async function analyze() {
+            const packets = document.getElementById('packets').value;
+            const ips = document.getElementById('ips').value;
+            const ssh = document.getElementById('ssh').value;
+            const ports = document.getElementById('ports').value;
+            
+            const response = await fetch(`/analyze?packets=${packets}&ips=${ips}&ssh=${ssh}&ports=${ports}`);
+            const result = await response.json();
+            
+            const div = document.getElementById('result');
+            div.className = result.level + '-bg';
+            
+            div.innerHTML = `
+                <h3 class="${result.level}">${result.status}</h3>
+                <p><strong>Тип угрозы:</strong> ${result.attack_type}</p>
+                <p><strong>Уверенность ИИ:</strong> ${result.confidence}%</p>
+                <p><strong>Уровень риска:</strong> ${result.risk}%</p>
+                <p><strong>Изучено паттернов:</strong> ${result.patterns}</p>
+            `;
+        }
+
+        function testDDoS() {
+            document.getElementById('packets').value = 8000;
+            document.getElementById('ips').value = 150;
+            document.getElementById('ssh').value = 5;
+            document.getElementById('ports').value = 3;
+        }
+        function testPortScan() {
+            document.getElementById('packets').value = 2000;
+            document.getElementById('ips').value = 25;
+            document.getElementById('ssh').value = 2;
+            document.getElementById('ports').value = 25;
+        }
+        function testSSHBrute() {
+            document.getElementById('packets').value = 800;
+            document.getElementById('ips').value = 3;
+            document.getElementById('ssh').value = 35;
+            document.getElementById('ports').value = 1;
+        }
+    </script>
+    <div style="margin-top: 20px;">
+        <h4>Быстрые тесты (запускают анализ сразу):</h4>
+        <button onclick="setAndAnalyze(8000, 150, 5, 3)">DDoS</button>
+        <button onclick="setAndAnalyze(2000, 25, 2, 25)">Сканирование</button>
+        <button onclick="setAndAnalyze(800, 3, 35, 1)">SSH Атака</button>
+        <button onclick="setAndAnalyze(100, 5, 2, 1)">Норма</button>
+    </div>
+    <script>
+    function setAndAnalyze(packets, ips, ssh, ports) {
+        document.getElementById('packets').value = packets;
+        document.getElementById('ips').value = ips;
+        document.getElementById('ssh').value = ssh;
+        document.getElementById('ports').value = ports;
+        analyze();
+    }
+    </script>
+</body>
+</html>
