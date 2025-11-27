@@ -19,6 +19,6 @@ async def analyze(packets: int = 100, ips: int = 5, ssh: int = 2, ports: int = 1
     return detector.analyze(packets, ips, ssh, ports)
 
 if __name__ == "__main__":
-    print("Запущено!")
+    print("Launched!")
     print("http://localhost:8000")
     uvicorn.run(app, host="127.0.0.1", port=8000)
