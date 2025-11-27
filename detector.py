@@ -43,7 +43,7 @@ class ThreatDetector:
         
         t = threading.Thread(target=worker, daemon=True)
         t.start()
-        print("Автообучение запущено")
+        print("Auto-learning has been launched")
     
     def _gen_learn(self):
         for _ in range(2):
@@ -93,39 +93,37 @@ class ThreatDetector:
             self.a_types.append(a_t)
 
         self.model.fit(self.pats, self.labs)
-        print(f"ИИ выучил {len(self.pats)} паттернов")
+        print(f"AI learned {len(self.pats)} patterns")
     
     def _detect_type(self, pkt, ip, sh, pt):
         if pkt > 3000 and ip > 80:
             return "DDoS"
         elif pt > 12:
-            return "Сканирование"
+            return "Scanning"
         elif sh > 15:
             return "SSH атака"
         elif (pkt > 2000 and sh > 10) or (pt > 8 and ip > 50):
-            return "Комбинированная"
+            return "Combination attack"
         elif pkt > 1500 or ip > 60 or sh > 8 or pt > 6:
-            return "Неизвестная"
+            return "Unknown attack"
         else:
-            return "Норма"
+            return "Norm"
     
     def analyze(self, pkt, ip, sh, pt):
         f = [[pkt, ip, sh, pt]]
         pred = self.model.predict(f)[0]
         conf = float(np.max(self.model.predict_proba(f)))
-        
         risk = min((pkt/5000*0.3 + ip/150*0.25 + sh/15*0.25 + pt/10*0.2), 1.0)
-        
         a_t = self._detect_type(pkt, ip, sh, pt)
         
         if pred == 1 or risk > 0.7:
-            stat = "АТАКА"
+            stat = "ATTACK"
             lvl = "critical"
         elif risk > 0.4:
-            stat = "ПОДОЗРИТЕЛЬНО"
+            stat = "SUSPICIOUS"
             lvl = "warning" 
         else:
-            stat = "НОРМА"
+            stat = "NORM"
             lvl = "normal"
         
         return {
@@ -135,4 +133,5 @@ class ThreatDetector:
             "risk": round(risk*100, 1),
             "patterns": len(self.pats),
             "attack_type": a_t
+
         }
